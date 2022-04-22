@@ -4,20 +4,31 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-// vključimo mongoose in ga povežemo z MongoDB
+var indexRouter = require('./routes/index');
+var usersRouter = require('./routes/userRoutes');
+var qRouter = require('./routes/questionRoutes');
+
+var app = express();
+
 var mongoose = require('mongoose');
-var mongoDB = "mongodb://127.0.0.1/vaja3";
+var mongoDB = "mongodb+srv://nick:Niksa15007@vaja3.w2tfx.mongodb.net/vaja3?retryWrites=true&w=majority";
 mongoose.connect(mongoDB);
 mongoose.Promise = global.Promise;
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-// vključimo routerje
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/userRoutes');
-var photosRouter = require('./routes/photoRoutes');
+var session = require('express-session');
+app.use(session({
+    secret: 'vaja3',
+    resave: true,
+    saveUninitialized: true
+}));
 
-var app = express();
+app.use(function (req, res, next) {
+    res.locals.session = req.session;
+    res.locals.title = 'Vaja3';
+    next();
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -29,29 +40,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-/**
- * Vključimo session in connect-mongo.
- * Connect-mongo skrbi, da se session hrani v bazi.
- * Posledično ostanemo prijavljeni, tudi ko spremenimo kodo (restartamo strežnik)
- */
-var session = require('express-session');
-var MongoStore = require('connect-mongo');
-app.use(session({
-  secret: 'work hard',
-  resave: true,
-  saveUninitialized: false,
-  store: MongoStore.create({mongoUrl: mongoDB})
-}));
-//Shranimo sejne spremenljivke v locals
-//Tako lahko do njih dostopamo v vseh view-ih (glej layout.hbs)
-app.use(function (req, res, next) {
-  res.locals.session = req.session;
-  next();
-});
-
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/photos', photosRouter);
+app.use('/questions', qRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

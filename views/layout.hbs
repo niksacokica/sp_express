@@ -1,23 +1,25 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>{{title}}</title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
+</head>
+<body>
     <nav>
-      <ul>
-        <li><a href='/'>Domov</a></li>
-        {{#if session.userId}}
-        <li><a href='/users/profile'>Profil</a></li>
-        <li><a href='/photos/publish'>Objavi sliko</a></li>
-        <li><a href='/users/logout'>Odjava</a></li>
-        {{else}}
-        <li><a href='/users/login'>Prijava</a></li>
-        <li><a href='/users/register'>Registracija</a></li>
-        {{/if}}
-      </ul>
+        <ul>
+            <li><a href='/'>Domov</a></li>
+            <li><a href='/questions'>Vprasanja</a></li>
+            {{#if session.userId}}
+            <li><a href='/users/profile'>Profil</a></li>
+            <li><a href='/questions/create'>Objavi vprasanje</a></li>
+            <li><a href='/questions/profile'>Moja vprasanja</a></li>
+            <li><a href='/users/logout'>Odjava</a></li>
+            {{else}}
+            <li><a href='/users/login'>Prijava</a></li>
+            <li><a href='/users/register'>Registracija</a></li>
+            {{/if}}
+        </ul>
     </nav>
     {{{body}}}
-  </body>
+</body>
 </html>

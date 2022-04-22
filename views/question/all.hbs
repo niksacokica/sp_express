@@ -1,0 +1,12 @@
+<h1>Vprasanja:</h1>
+{{#each question}}
+<br /><hr /><br />
+<h2>Naslov: {{name}} </h2>
+Opis: <span>{{description}}</span>
+<br /><br />
+Objavil: <span>{{postedBy.username}}</span>
+<br />
+Datum: <span>{{date}}</span>
+<br />
+Oznake: <span>{{tags}}</span>
+{{/each}}

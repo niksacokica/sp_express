@@ -4,8 +4,8 @@ var Schema   = mongoose.Schema;
 
 var userSchema = new Schema({
 	'username' : String,
-	'password' : String,
-	'email' : String
+	'email' : String,
+	'password' : String
 });
 
 userSchema.pre('save', function(next){
@@ -41,4 +41,4 @@ userSchema.statics.authenticate = function(username, password, callback){
 }
 
 var User = mongoose.model('user', userSchema);
-module.exports = User;
+module.exports = mongoose.model('user', userSchema);

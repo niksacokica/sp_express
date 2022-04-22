@@ -53,10 +53,10 @@ module.exports = {
     create: function (req, res) {
         var user = new UserModel({
 			username : req.body.username,
-			password : req.body.password,
-			email : req.body.email
+			email : req.body.email,
+			password : req.body.password
         });
-
+        
         user.save(function (err, user) {
             if (err) {
                 return res.status(500).json({
@@ -64,8 +64,7 @@ module.exports = {
                     error: err
                 });
             }
-
-            //return res.status(201).json(user);
+            
             return res.redirect('/users/login');
         });
     },
@@ -91,8 +90,8 @@ module.exports = {
             }
 
             user.username = req.body.username ? req.body.username : user.username;
-			user.password = req.body.password ? req.body.password : user.password;
 			user.email = req.body.email ? req.body.email : user.email;
+			user.password = req.body.password ? req.body.password : user.password;
 			
             user.save(function (err, user) {
                 if (err) {
@@ -124,19 +123,19 @@ module.exports = {
             return res.status(204).json();
         });
     },
-
-    showRegister: function(req, res){
+	
+	showLogin: function(req, res){
+        res.render('user/login');
+    },
+	
+	showRegister: function(req, res){
         res.render('user/register');
     },
 
-    showLogin: function(req, res){
-        res.render('user/login');
-    },
-
-    login: function(req, res, next){
-        UserModel.authenticate(req.body.username, req.body.password, function(err, user){
-            if(err || !user){
-                var err = new Error('Wrong username or paassword');
+    login: function (req, res, next) {
+        UserModel.authenticate(req.body.username, req.body.password, function (err, user) {
+            if (err || !user) {
+                var err = new Error('Wrong username or password');
                 err.status = 401;
                 return next(err);
             }
@@ -145,29 +144,29 @@ module.exports = {
         });
     },
 
-    profile: function(req, res,next){
+    profile: function (req, res, next) {
         UserModel.findById(req.session.userId)
-        .exec(function(error, user){
-            if(error){
-                return next(error);
-            } else{
-                if(user===null){
-                    var err = new Error('Not authorized, go back!');
-                    err.status = 400;
-                    return next(err);
-                } else{
-                    return res.render('user/profile', user);
+            .exec(function (error, user) {
+                if (error) {
+                    return next(error);
+                } else {
+                    if (user === null) {
+                        var err = new Error('Not authorized, go back!');
+                        err.status = 400;
+                        return next(err);
+                    } else {
+                        return res.render('user/profile', user);
+                    }
                 }
-            }
-        });  
+            });
     },
 
-    logout: function(req, res, next){
-        if(req.session){
-            req.session.destroy(function(err){
-                if(err){
+    logout: function (req, res, next) {
+        if (req.session) {
+            req.session.destroy(function (err) {
+                if (err) {
                     return next(err);
-                } else{
+                } else {
                     return res.redirect('/');
                 }
             });
