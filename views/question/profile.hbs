@@ -15,19 +15,21 @@ Oznake: <span>{{tags}}</span>
 <br />
 <h3>Odgovori:</h3>
 {{#each comments}}
+{{#if ../hasAnswer}}
 {{#if answer}}
 <b>{{postedBy.username}}: {{content}}</b>
 {{else}}
 <span>{{postedBy.username}}: {{content}}</span>
 {{/if}}
 <br />
-{{/each}}
-{{#if ../session.userId}}
-<br />
-<form action="/questions/commentAdd" method="post">
-    <input type="hidden" name="id" value={{_id}}>
-    <input type="text" name="comment" placeholder="Type your comment here">
-    <input type="submit" value="POST">
+{{else}}
+<form action="/questions/accept" method="post">
+    <input type="hidden" name="question_id" value={{../_id}}>
+    <input type="hidden" name="comment_id" value={{_id}}>
+    <span>{{postedBy.username}}: {{content}}</span>
+    <br />
+    <input type="submit" value="ACCEPT">
 </form>
 {{/if}}
+{{/each}}
 {{/each}}

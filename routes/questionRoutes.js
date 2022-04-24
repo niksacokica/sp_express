@@ -16,6 +16,10 @@ router.get('/profile', requiresLogin, questionController.userQuestions);
 
 router.get('/create', questionController.qCreate);
 
+router.post('/accept', questionController.accept);
+
+router.post('/commentAdd', questionController.commentAdd);
+
 router.get('/', questionController.list);
 
 router.get('/:id', questionController.show);
